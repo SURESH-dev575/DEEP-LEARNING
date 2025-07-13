@@ -1,0 +1,100 @@
+print('FORWARD PROPAGATION')
+
+import pandas as pd
+import numpy as np
+import seaborn as sc
+import matplotlib.pyplot as plt
+
+df = pd.DataFrame({'first':[12],'second':[56],'third':[45],'final':[90]})
+df
+
+w1 = 1.3
+w2 = 2.5
+w3 = 5.3
+w4 = 4.3
+w5 = 2.3
+w6 = 4.2
+w7 = 3.1
+w8 = 2.9
+
+b1 = 4.2
+b2 = -3.2
+b3 = 2.4
+
+x1 = df['first']
+x2 = df['second']
+x3  = df['third']
+
+def sigmoid(x):
+  return 1/(1+np.exp(-x))
+
+def forward_propogation(w1,w2,w3,w4,w5,w6,w7,w8,b1,b2,b3):
+  z1 = w1*x1 +w2*x2 +w3*x3 +b1
+  z2 = w4*x1 +w5*x2 +w6*x3 +b2
+  g1= sigmoid(z1)
+  g2= sigmoid(z2)
+  z3 = w7*g1 +w8*g2 +b3
+
+  return z1,z2,g1,g2,z3
+
+forward_data = forward_propogation(w1,w2,w3,w4,w5,w6,w7,w8,b1,b2,b3)
+y_pred = float(forward_data[4])
+y_pred
+print(forward_data)
+
+error =  forward_data[4] - df['final']
+error
+
+print('Backward propagation')
+print('called as an GRADIENT DECENT')
+
+def sigmoid_determination(x):
+  return x*(1-x)
+
+def backward_propagation(g1,g2,x1,x2,x3):
+  dcy = 2*(y_pred - df['final'])
+
+  bw7 = dcy*g1
+  bw8 = dcy*g2
+  bb3 = dcy
+
+  dataz1 = dcy * bw7 * sigmoid_determination(g1)
+  dataz2 = dcy * bw8 * sigmoid_determination(g2)
+  bw1 = dataz1 * x1
+  bw2 = dataz1 * x2
+  bw3 = dataz1 * x3
+  bw4 = dataz2 * x1
+  bw5 = dataz2 * x2
+  bw6 = dataz2 * x3
+
+  bb1 = dataz1
+  bb2 = dataz2
+
+  return bw1,bw2,bw3,bw4,bw5,bw6,bw7,bw8,bb1,bb2,bb3
+
+forward_data = backward_propagation(forward_data[2],forward_data[3],x1,x2,x3)
+
+bw1 = float(forward_data[0])
+bw2 = float(forward_data[1])
+bw3 = float(forward_data[2])
+bw4 = float(forward_data[3])
+bw5 = float(forward_data[4])
+bw6 = float(forward_data[5])
+bw7 = float(forward_data[6])
+bw8 = float(forward_data[7])
+
+bb1 = float(forward_data[8])
+bb2 = float(forward_data[9])
+bb3 = float(forward_data[10])
+
+print(f'w1 data is',{w1 - 0.01 * bw1})
+print(f'w2 data is',{w2 - 0.01 * bw2})
+print(f'w3 data is',{w3 - 0.01 * bw3})
+print(f'w4 data is',{w4 - 0.01 * bw4})
+print(f'w5 data is',{w5 - 0.01 * bw5})
+print(f'w6 data is',{w6 - 0.01 * bw6})
+print(f'w7 data is',{w7 - 0.01 * bw7})
+print(f'w8 data is',{w8 - 0.01 * bw8})
+print(f'b1 data is',{b1 - 0.01 * bb1})
+print(f'b2 data is',{b2 - 0.01 * bb2})
+print(f'b3 data is',{b3 - 0.01 * bb3})  
