@@ -1,0 +1,43 @@
+
+import pandas as pd
+import numpy as np
+
+x = np.random.rand(1000,3) * [24,10,60]
+y = np.random.rand(1000)*100
+y
+
+df = pd.DataFrame(x,columns=['no_of_hours','no_of_coffies','no_of_students'])
+df['final_marks'] = y
+df
+
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+
+def creation_nns():
+  #input layers nodes
+  inputs = keras.Input(shape=(3,))
+  #hidden nodes cretion
+  hidden = layers.Dense(2,activation='sigmoid')(inputs)
+  #output nodes
+  outputs = layers.Dense(1,activation='linear')(hidden)
+
+  #combined all nns layers
+  return keras.Model(inputs=inputs,outputs=outputs)
+
+
+model = creation_nns()
+
+model.compile(optimizer=keras.optimizers.Adam(learning_rate=0.01),loss='mean_squared_error')
+model.summary()
+
+
+history = model.fit(x,y,epochs=150,validation_split=0.2,verbose=1)
+
+history
+
+test = model.evaluate(x,y,verbose=1)
+
+plt.figure(figsize=(10,5))
+plt.plot(history.history['loss'])
+
