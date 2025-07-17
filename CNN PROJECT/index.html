@@ -17,14 +17,29 @@
         input[type="number"] {
             width: 60px;
         }
+        #predict-form
+        {
+            text-align: center;
+            align-content: center;
+            justify-content: center;
+            /* border: 5px solid black; */
+        }
+        #output
+        {
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
-    <h1>Digit Predictor</h1>
+    <h1 style="align-items: center; text-align: center; justify-content: center; ">Digit Predictor(MNIST)</h1>
 
     <form id="predict-form">
         <label for="index">Enter Index (1–60000): </label>
         <input type="number" id="index" name="index" min="1" max="60000" required>
+        <br>
+        <br>
         <button type="submit">Predict</button>
         <button type="button" id="reset-btn">Reset</button>
     </form>
@@ -52,9 +67,10 @@
                 outputDiv.innerHTML = `<p style="color:red;">${data.error}</p>`;
             } else {
                 outputDiv.innerHTML = `
-                    <p><strong>Predicted Digit:</strong> ${data.digit}</p>
                     <p><strong>Confidence:</strong> ${data.confidence}%</p>
+                    <p><strong>INDEX IMAGE IS SHOWN BELOW</strong></p>
                     <img src="data:image/png;base64,${data.image}" width="150" height="150">
+                     <p><strong>Predicted Digit:</strong> ${data.digit}</p>
                 `;
             }
         });
