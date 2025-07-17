@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MNIST Digit Predictor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+        img {
+            margin-top: 20px;
+        }
+        #output {
+            margin-top: 20px;
+        }
+        input[type="number"] {
+            width: 60px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Digit Predictor</h1>
+
+    <form id="predict-form">
+        <label for="index">Enter Index (1–60000): </label>
+        <input type="number" id="index" name="index" min="1" max="60000" required>
+        <button type="submit">Predict</button>
+        <button type="button" id="reset-btn">Reset</button>
+    </form>
+
+    <div id="output"></div>
+
+    <script>
+        const form = document.getElementById('predict-form');
+        const outputDiv = document.getElementById('output');
+        const resetBtn = document.getElementById('reset-btn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const index = formData.get('index');
+
+            const response = await fetch('/predict', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                outputDiv.innerHTML = `<p style="color:red;">${data.error}</p>`;
+            } else {
+                outputDiv.innerHTML = `
+                    <p><strong>Predicted Digit:</strong> ${data.digit}</p>
+                    <p><strong>Confidence:</strong> ${data.confidence}%</p>
+                    <img src="data:image/png;base64,${data.image}" width="150" height="150">
+                `;
+            }
+        });
+
+       
+
+        resetBtn.addEventListener('click', () => {
+    document.getElementById('index').value = '';
+    outputDiv.innerHTML = '';
+});
+
+    </script>
+</body>
+</html>
